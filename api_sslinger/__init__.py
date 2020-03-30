@@ -70,4 +70,5 @@ class ApiSslinger(object):
         self.app.run(
             host=(host if host else self.DEFAULT_HOST),
             port=(port if port else self.DEFAULT_PORT),
-            debug=debug)
+            debug=debug,
+            threaded=(os.environ.get('THREADING', True) != 'false'))
