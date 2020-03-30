@@ -10,7 +10,7 @@ class ApiSslinger(object):
     DEFAULT_PORT = '5000'
 
     IGNORED_HEADERS = [
-    	'Content-Length', 'Upgrade-Insecure-Requests']
+        'Content-Length', 'Upgrade-Insecure-Requests']
 
     def __init__(self):
         """Setup flask app"""
@@ -30,8 +30,8 @@ class ApiSslinger(object):
             headers=dict(flask.request.headers),
             # ...and data/form data from request
             data=(dict(flask.request.args)
-            	  if flask.request.args else
-            	  dict(flask.request.form)),
+                  if flask.request.args else
+                  dict(flask.request.form)),
 
             # Ensure redirects are returned to user
             allow_redirects=False
