@@ -10,8 +10,9 @@ class ApiSslinger(object):
     DEFAULT_HOST = '127.0.0.1'
     DEFAULT_PORT = '5000'
 
-    IGNORED_HEADERS = [
-        'Content-Length', 'Upgrade-Insecure-Requests']
+    IGNORED_REQ_HEADERS = ['HOST']
+    IGNORED_RES_HEADERS = [
+        'CONTENT-LENGTH', 'UPGRADE-INSECURE-REQUESTS', 'CONTENT-ENCODING']
 
     @property
     def proxies(self):
@@ -29,6 +30,14 @@ class ApiSslinger(object):
 
     def handle_request(self, url):
         """Handle API request"""
+        # Remove ignored request headers
+        u_req_headers = dict(flask.request.headers)
+        req_headers = {}
+        [req_headers.update({h: u_req_headers[h]}) if h.upper() not in self.IGNORED_REQ_HEADERS else None for h in u_req_headers]
+
+        # Add new host header
+        req_headers['Host'] = url.split('/')[0]
+
         r = requests.request(
             # Copy request method
             flask.request.method,
@@ -37,7 +46,7 @@ class ApiSslinger(object):
             'https://' + url,
 
             # Pass headers
-            headers=dict(flask.request.headers),
+            headers=req_headers,
             # ...and data/form data from request
             data=(dict(flask.request.args)
                   if flask.request.args else
@@ -50,16 +59,20 @@ class ApiSslinger(object):
             proxies=self.proxies
         )
 
-        # Remove _banned_ headers
-        headers = {}
-        r_headers = dict(r.headers)
-        [headers.update({h: r_headers[h]}) if h not in self.IGNORED_HEADERS else None for h in r_headers]
+        # Remove _banned_ headers.
+        # Define response headers and upstream response headers
+        res_headers = {}
+        u_res_headers = dict(r.headers)
+        [res_headers.update({h: u_res_headers[h]}) if h.upper() not in self.IGNORED_RES_HEADERS else None for h in u_res_headers]
 
         return flask.Response(
             # Passthrough response content, staus code and headers
             response=r.content,
             status=r.status_code,
-            headers=headers,
+            headers=res_headers,
+            # Add mime-type and content type, if they exist
+            mimetype=res_headers.get('Mimetype', None),
+            content_type=res_headers.get('Content-Type', None),
             # This seems necessary, since we writing a bunch
             # of headers that flask will try to set.
             direct_passthrough=True
