@@ -28,7 +28,10 @@ class ApiSslinger(object):
             # ...and data/form data from request
             data=(dict(flask.request.args)
             	  if flask.request.args else
-            	  dict(flask.request.form))
+            	  dict(flask.request.form)),
+
+            # Ensure redirects are returned to user
+            allow_redirects=False
         )
         print(flask.request.headers)
         headers = dict(r.headers)
