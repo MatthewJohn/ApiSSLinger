@@ -2,6 +2,8 @@
 
 # API SSLinger
 
+Slinging SSL round HTTP calls
+
 API Proxy to provide SSL wrapper to upstream APIs. Useful for older applications that do not support modern TLS standards (e.g. TLS 1.2)
 
 
