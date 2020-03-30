@@ -36,13 +36,11 @@ class ApiSslinger(object):
             # Ensure redirects are returned to user
             allow_redirects=False
         )
-        print(flask.request.headers)
 
         # Remove _banned_ headers
         headers = {}
         r_headers = dict(r.headers)
         [headers.update({h: r_headers[h]}) if h not in self.IGNORED_HEADERS else None for h in r_headers]
-        print(headers)
 
         return flask.Response(
             # Passthrough response content, staus code and headers
