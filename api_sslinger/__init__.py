@@ -1,4 +1,5 @@
 
+import os
 import flask
 import requests
 
@@ -11,6 +12,15 @@ class ApiSslinger(object):
 
     IGNORED_HEADERS = [
         'Content-Length', 'Upgrade-Insecure-Requests']
+
+    @property
+    def proxies(self):
+    	"""Obtain proxies dict config."""
+    	proxies = {}
+    	https_proxy = os.environ.get('https_proxy', '')
+    	if https_proxy:
+    		proxies['https'] = https_proxy
+    	return proxies
 
     def __init__(self):
         """Setup flask app"""
@@ -34,7 +44,10 @@ class ApiSslinger(object):
                   dict(flask.request.form)),
 
             # Ensure redirects are returned to user
-            allow_redirects=False
+            allow_redirects=False,
+
+            # Set proxies config
+            proxies=self.proxies
         )
 
         # Remove _banned_ headers
