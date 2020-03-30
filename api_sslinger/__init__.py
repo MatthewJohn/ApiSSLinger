@@ -9,6 +9,9 @@ class ApiSslinger(object):
     DEFAULT_HOST = '127.0.0.1'
     DEFAULT_PORT = '5000'
 
+    IGNORED_HEADERS = [
+    	'Content-Length', 'Upgrade-Insecure-Requests']
+
     def __init__(self):
         """Setup flask app"""
         self.app = flask.Flask(__name__)
@@ -34,9 +37,13 @@ class ApiSslinger(object):
             allow_redirects=False
         )
         print(flask.request.headers)
-        headers = dict(r.headers)
-        if 'Content-Length' in headers:
-	        del headers['Content-Length']
+
+        # Remove _banned_ headers
+        headers = {}
+        r_headers = dict(r.headers)
+        [headers.update({h: r_headers[h]}) if h not in self.IGNORED_HEADERS else None for h in r_headers]
+        print(headers)
+
         return flask.Response(
             # Passthrough response content, staus code and headers
             response=r.content,
