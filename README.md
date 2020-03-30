@@ -49,3 +49,7 @@ This is _only_ meant for APIs, as general websitess have a lot of (absolute) rel
 
 * Gunslinga - Pegbaord Nerds - https://www.youtube.com/watch?v=vIaPWxMPhug
 
+
+## Quotes
+
+* `You yellow-bellied, lily-livered, API-sslingin'... draw!` - Phoebe, Friends (27. March 1997)
