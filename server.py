@@ -9,4 +9,4 @@ server = ApiSslinger()
 server.start(
     *sys.argv[1:],
     debug=os.environ.get('DEBUG', False),
-    threaded=(os.environ.get('MULTITHREAD', True) != 'false'))
+    threaded=(os.environ.get('THREADING', True) != 'false'))
