@@ -6,4 +6,7 @@ import os
 from api_sslinger import ApiSslinger
 
 server = ApiSslinger()
-server.start(*sys.argv[1:], debug=os.environ.get('DEBUG', False))
+server.start(
+    *sys.argv[1:],
+    debug=os.environ.get('DEBUG', False),
+    threaded=(os.environ.get('MULTITHREAD', True) != 'false'))
