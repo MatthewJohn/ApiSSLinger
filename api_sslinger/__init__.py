@@ -13,6 +13,7 @@ class ApiSslinger(object):
     IGNORED_REQ_HEADERS = ['HOST']
     IGNORED_RES_HEADERS = [
         'CONTENT-LENGTH', 'UPGRADE-INSECURE-REQUESTS', 'CONTENT-ENCODING']
+    HTTP_METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH']
 
     @property
     def proxies(self):
@@ -26,7 +27,7 @@ class ApiSslinger(object):
     def __init__(self):
         """Setup flask app"""
         self.app = flask.Flask(__name__)
-        self.app.route('/<path:url>')(self.handle_request)
+        self.app.route('/<path:url>', methods=self.HTTP_METHODS)(self.handle_request)
 
     def handle_request(self, url):
         """Handle API request"""
